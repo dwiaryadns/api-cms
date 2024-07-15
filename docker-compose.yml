@@ -1,0 +1,67 @@
+version: "3.8"
+
+services:
+    laravel:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: laravel-app
+        container_name: laravel-app
+        restart: unless-stopped
+        tty: true
+        environment:
+            SERVICE_NAME: laravel
+            SERVICE_TAGS: dev
+        working_dir: /var/www
+        volumes:
+            - ./:/var/www
+            - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+        networks:
+            - app-network
+        expose:
+            - "9000"
+
+    nginx:
+        image: nginx:alpine
+        container_name: nginx
+        restart: unless-stopped
+        ports:
+            - "8888:80"
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx/conf.d:/etc/nginx/conf.d
+        depends_on:
+            - laravel
+        networks:
+            - app-network
+
+    db:
+        image: postgres
+        container_name: postgres
+        volumes:
+            - ./postgresql/data:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_DB: cms-mag
+            POSTGRES_USER: maginsurance
+            POSTGRES_PASSWORD: m4GH3alTh**5432
+        networks:
+            - app-network
+
+    pgadmin:
+        image: dpage/pgadmin4
+        container_name: pgAdmin
+        ports:
+            - "5050:80"
+        depends_on:
+            - db
+        environment:
+            PGADMIN_DEFAULT_EMAIL: maghealthtest@gmail.com
+            PGADMIN_DEFAULT_PASSWORD: m4GH3alTh**5432
+        networks:
+            - app-network
+
+networks:
+    app-network:
+        driver: bridge
