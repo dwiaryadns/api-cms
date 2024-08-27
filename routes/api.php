@@ -25,7 +25,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/get-token', [APIController::class, 'getToken']);
-Route::post('/login', [APIController::class, 'login']);
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/list-branches', [APIController::class, 'list_branches']);

@@ -41,70 +41,60 @@ class Handler extends ExceptionHandler
                         return new JsonResponse([
                             'success' => false,
                             'message' => 'Bad Request.',
-                            'error' => $e->getMessage(),
                         ], Response::HTTP_BAD_REQUEST);
 
                     case 401:
                         return new JsonResponse([
                             'success' => false,
                             'message' => 'Unauthenticated.',
-                            'error' => $e->getMessage(),
                         ], Response::HTTP_UNAUTHORIZED);
 
                     case 403:
                         return new JsonResponse([
                             'success' => false,
                             'message' => 'Forbidden.',
-                            'error' => $e->getMessage(),
                         ], Response::HTTP_FORBIDDEN);
 
                     case 404:
                         return new JsonResponse([
                             'success' => false,
                             'message' => 'Not Found.',
-                            'error' => $e->getMessage(),
                         ], Response::HTTP_NOT_FOUND);
 
                     case 405:
                         return new JsonResponse([
                             'success' => false,
                             'message' => 'Method Not Allowed.',
-                            'error' => $e->getMessage(),
                         ], Response::HTTP_METHOD_NOT_ALLOWED);
 
                     case 422:
                         return new JsonResponse([
                             'success' => false,
                             'message' => 'Unprocessable Entity.',
-                            'error' => $e->getMessage(),
                         ], Response::HTTP_UNPROCESSABLE_ENTITY);
 
                     case 429:
                         return new JsonResponse([
                             'success' => false,
                             'message' => 'Too Many Requests.',
-                            'error' => $e->getMessage(),
                         ], Response::HTTP_TOO_MANY_REQUESTS);
 
                     case 500:
                         return new JsonResponse([
                             'success' => false,
                             'message' => 'Internal Server Error.',
-                            'error' => $e->getMessage(),
                         ], Response::HTTP_INTERNAL_SERVER_ERROR);
 
                     case 503:
                         return new JsonResponse([
                             'success' => false,
                             'message' => 'Service Unavailable.',
-                            'error' => $e->getMessage(),
                         ], Response::HTTP_SERVICE_UNAVAILABLE);
 
                     default:
                         return new JsonResponse([
                             'success' => false,
                             'message' => 'An unexpected error occurred.',
-                            'error' => $e->getMessage(),
                         ], $statusCode);
                 }
             }
