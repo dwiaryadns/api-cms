@@ -18,6 +18,11 @@ return new class extends Migration
             $table->string('usia')->nullable();
             $table->string('group_id')->nullable();
             $table->string('policy_no')->nullable();
+            $table->string('sid')->nullable();
+            $table->string('payor')->nullable();
+            $table->string('corporate')->nullable();
+            $table->text('firebase_token')->nullable();
+            $table->string('email')->nullable();
             $table->timestamps();
         });
     }

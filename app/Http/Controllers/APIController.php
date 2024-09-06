@@ -77,7 +77,12 @@ class APIController extends Controller
                     'gender' => $request->gender,
                     'usia' => $request->usia,
                     'group_id' => $request->group_id,
-                    'policy_no' => $request->policy_no
+                    'policy_no' => $request->policy_no,
+                    'sid' => $request->sid,
+                    'payor' => $request->payor,
+                    'corporate' => $request->corporate,
+                    'firebase_token' => $request->firebase_token,
+                    'email' => $request->email,
                 ]);
 
                 $jsonData = json_encode($userProfile);
@@ -88,7 +93,6 @@ class APIController extends Controller
                     'success' => true,
                     'message' => 'Added User Profile Successfully',
                     'data' => $data,
-                    'decrypt' => $decrypt
                 ], 200);
             } else {
                 if (!$existingUserProfile) {
@@ -101,7 +105,12 @@ class APIController extends Controller
                     'gender' => $request->gender,
                     'usia' => $request->usia,
                     'group_id' => $request->group_id,
-                    'policy_no' => $request->policy_no
+                    'policy_no' => $request->policy_no,
+                    'sid' => $request->sid,
+                    'payor' => $request->payor,
+                    'corporate' => $request->corporate,
+                    'firebase_token' => $request->firebase_token,
+                    'email' => $request->email,
                 ]);
 
                 $jsonData = json_encode($existingUserProfile);
@@ -112,7 +121,6 @@ class APIController extends Controller
                     'success' => true,
                     'message' => 'Updated User Profile Successfully',
                     'data' => $data,
-                    'decrypt' => $decrypt
                 ], 200);
             }
         } catch (\Throwable $th) {

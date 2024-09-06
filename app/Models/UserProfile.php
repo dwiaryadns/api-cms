@@ -14,6 +14,11 @@ class UserProfile extends Model
         'gender',
         'usia',
         'group_id',
-        'policy_no'
+        'policy_no',
+        'sid',
+        'payor',
+        'corporate',
+        'firebase_token',
+        'email',
     ];
 }
