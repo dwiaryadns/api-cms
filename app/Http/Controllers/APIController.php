@@ -102,15 +102,15 @@ class APIController extends Controller
                     ], 404);
                 }
                 $existingUserProfile->update([
-                    'gender' => $request->gender,
-                    'usia' => $request->usia,
-                    'group_id' => $request->group_id,
-                    'policy_no' => $request->policy_no,
-                    'sid' => $request->sid,
-                    'payor' => $request->payor,
-                    'corporate' => $request->corporate,
-                    'firebase_token' => $request->firebase_token,
-                    'email' => $request->email,
+                    'gender' => $request->gender ?? $existingUserProfile->gender,
+                    'usia' => $request->usia ?? $existingUserProfile->usia,
+                    'group_id' => $request->group_id ?? $existingUserProfile->group_id,
+                    'policy_no' => $request->policy_no ?? $existingUserProfile->policy_no,
+                    'sid' => $request->sid ?? $existingUserProfile->sid,
+                    'payor' => $request->payor ?? $existingUserProfile->payor,
+                    'corporate' => $request->corporate ?? $existingUserProfile->corporate,
+                    'firebase_token' => $request->firebase_token ?? $existingUserProfile->firebase_token,
+                    'email' => $request->email ?? $existingUserProfile->email,
                 ]);
 
                 $jsonData = json_encode($existingUserProfile);
