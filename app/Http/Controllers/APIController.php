@@ -16,6 +16,30 @@ use Tymon\JWTAuth\Facades\JWTFactory;
 class APIController extends Controller
 {
 
+    public function getFaq()
+    {
+        $terms = DB::table('faqs')->get();
+        $jsonData = json_encode($terms);
+        $data = $this->encryptAESCryptoJS($jsonData, env('PRIVATE_KEY_API'));
+        $decrypt = $this->decryptAESCryptoJS($data, env('PRIVATE_KEY_API'));
+        return response()->json([
+            'success' => true,
+            'message' => 'Success Get Terms',
+            'data' => $data,
+        ]);
+    }
+    public function getTerms()
+    {
+        $terms = DB::table('terms')->get();
+        $jsonData = json_encode($terms);
+        $data = $this->encryptAESCryptoJS($jsonData, env('PRIVATE_KEY_API'));
+        $decrypt = $this->decryptAESCryptoJS($data, env('PRIVATE_KEY_API'));
+        return response()->json([
+            'success' => true,
+            'message' => 'Success Get Terms',
+            'data' => $data,
+        ]);
+    }
     public function getPromotion()
     {
         $promotion = DB::table('promotions')->get();
@@ -40,13 +64,12 @@ class APIController extends Controller
             'data' => $data,
         ]);
     }
-
-
     public function user_profile_store(Request $request)
     {
+        $sData = $request->sData;
+        $data = json_decode($this->decryptAESCryptoJS($sData, env('PRIVATE_KEY_API')));
         $validator = Validator::make($request->all(), [
-            'username' => 'required',
-            'type' => 'required',
+            'sData' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -60,9 +83,9 @@ class APIController extends Controller
             ], 422);
         }
 
-        $existingUserProfile = UserProfile::where('username', $request->username)->first();
+        $existingUserProfile = UserProfile::where('username', $data->username)->first();
 
-        $addOrUpdate = $request->type;
+        $addOrUpdate = $data->type;
 
         try {
             if ($addOrUpdate === 'add') {
@@ -73,16 +96,16 @@ class APIController extends Controller
                     ], 400);
                 }
                 $userProfile = UserProfile::create([
-                    'username' => $request->username,
-                    'gender' => $request->gender,
-                    'usia' => $request->usia,
-                    'group_id' => $request->group_id,
-                    'policy_no' => $request->policy_no,
-                    'sid' => $request->sid,
-                    'payor' => $request->payor,
-                    'corporate' => $request->corporate,
-                    'firebase_token' => $request->firebase_token,
-                    'email' => $request->email,
+                    'username' => $data->username,
+                    'gender' => $data->gender,
+                    'usia' => $data->usia,
+                    'group_id' => $data->group_id,
+                    'policy_no' => $data->policy_no,
+                    'sid' => $data->sid,
+                    'payor' => $data->payor,
+                    'corporate' => $data->corporate,
+                    'firebase_token' => $data->firebase_token,
+                    'email' => $data->email,
                 ]);
 
                 $jsonData = json_encode($userProfile);
@@ -102,15 +125,15 @@ class APIController extends Controller
                     ], 404);
                 }
                 $existingUserProfile->update([
-                    'gender' => $request->gender ?? $existingUserProfile->gender,
-                    'usia' => $request->usia ?? $existingUserProfile->usia,
-                    'group_id' => $request->group_id ?? $existingUserProfile->group_id,
-                    'policy_no' => $request->policy_no ?? $existingUserProfile->policy_no,
-                    'sid' => $request->sid ?? $existingUserProfile->sid,
-                    'payor' => $request->payor ?? $existingUserProfile->payor,
-                    'corporate' => $request->corporate ?? $existingUserProfile->corporate,
-                    'firebase_token' => $request->firebase_token ?? $existingUserProfile->firebase_token,
-                    'email' => $request->email ?? $existingUserProfile->email,
+                    'gender' => $data->gender ?? $existingUserProfile->gender,
+                    'usia' => $data->usia ?? $existingUserProfile->usia,
+                    'group_id' => $data->group_id ?? $existingUserProfile->group_id,
+                    'policy_no' => $data->policy_no ?? $existingUserProfile->policy_no,
+                    'sid' => $data->sid ?? $existingUserProfile->sid,
+                    'payor' => $data->payor ?? $existingUserProfile->payor,
+                    'corporate' => $data->corporate ?? $existingUserProfile->corporate,
+                    'firebase_token' => $data->firebase_token ?? $existingUserProfile->firebase_token,
+                    'email' => $data->email ?? $existingUserProfile->email,
                 ]);
 
                 $jsonData = json_encode($existingUserProfile);
@@ -129,6 +152,18 @@ class APIController extends Controller
                 'message' => $th->getMessage(),
             ]);
         }
+    }
+    public function getNews()
+    {
+        $news = DB::table('news')->get();
+        $jsonData = json_encode($news);
+        $data = $this->encryptAESCryptoJS($jsonData, env('PRIVATE_KEY_API'));
+        $decrypt = $this->decryptAESCryptoJS($data, env('PRIVATE_KEY_API'));
+        return response()->json([
+            'success' => true,
+            'message' => 'Success Get New',
+            'data' => $data,
+        ]);
     }
 
     public function getToken(Request $request)
@@ -158,7 +193,6 @@ class APIController extends Controller
             'expires_in' => 60 * 60,
         ]);
     }
-
 
     public function encryptAESCryptoJS($plainText, $passphrase)
     {

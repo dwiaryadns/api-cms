@@ -25,9 +25,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/get-token', [APIController::class, 'getToken']);
+Route::post('/decrypt', [APIController::class, 'decrypt']);
+Route::post('/encrypt', [APIController::class, 'encrypt']);
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/list-branches', [APIController::class, 'list_branches']);
     Route::get('/promotions', [APIController::class, 'getPromotion']);
+    Route::get('/faq', [APIController::class, 'getFaq']);
+    Route::get('/terms', [APIController::class, 'getTerms']);
+    Route::get('/news', [APIController::class, 'getNews']);
     Route::post('/user-profile-store', [APIController::class, 'user_profile_store']);
 });
