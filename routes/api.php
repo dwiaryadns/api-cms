@@ -25,10 +25,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/get-token', [APIController::class, 'getToken']);
-Route::post('/decrypt', [APIController::class, 'decrypt']);
-Route::post('/encrypt', [APIController::class, 'encrypt']);
 
-Route::middleware('auth:api')->group(function () {
+Route::post('/store-file/{folder}', [APIController::class, 'storeFile'])->middleware('store.file.token');
+
+Route::middleware(['auth:api', 'invalidate.token'])->group(function () {
     Route::get('/list-branches', [APIController::class, 'list_branches']);
     Route::get('/promotions', [APIController::class, 'getPromotion']);
     Route::get('/faq', [APIController::class, 'getFaq']);

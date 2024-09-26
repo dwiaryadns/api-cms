@@ -19,3 +19,5 @@ yarn-error.log
 /.vscode
 /laravel-app
 /postgresql
+/public/news
+/public/promotions

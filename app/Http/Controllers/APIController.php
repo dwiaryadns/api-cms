@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserProfile;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Facades\JWTFactory;
 
@@ -42,7 +44,12 @@ class APIController extends Controller
     }
     public function getPromotion()
     {
-        $promotion = DB::table('promotions')->get();
+        $currentDate = Carbon::now()->format('Y-m-d');
+
+        $promotion = DB::table('promotions')
+            ->whereDate('start_date', '<=', $currentDate)
+            ->whereDate('end_date', '>=', $currentDate)
+            ->get();
         $jsonData = json_encode($promotion);
         $data = $this->encryptAESCryptoJS($jsonData, env('PRIVATE_KEY_API'));
         $decrypt = $this->decryptAESCryptoJS($data, env('PRIVATE_KEY_API'));
@@ -155,7 +162,7 @@ class APIController extends Controller
     }
     public function getNews()
     {
-        $news = DB::table('news')->get();
+        $news = DB::table('news')->where('is_active', 1)->get();
         $jsonData = json_encode($news);
         $data = $this->encryptAESCryptoJS($jsonData, env('PRIVATE_KEY_API'));
         $decrypt = $this->decryptAESCryptoJS($data, env('PRIVATE_KEY_API'));
@@ -191,6 +198,26 @@ class APIController extends Controller
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => 60 * 60,
+        ]);
+    }
+
+    public function storeFile(Request $request, $folder)
+    {
+        $request->validate([
+            'image' => 'required|mimes:jpg,png,jpeg,svg',
+        ]);
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = $folder . '_' . time()  . '_' . Str::random(16) . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path($folder), $imageName);
+            $imagePath = $folder . '/' . $imageName;
+        }
+        Log::info('Called');
+        return response()->json([
+            'success' => true,
+            'image_path' => $imagePath,
+            'message' => 'Image uploaded successfully'
         ]);
     }
 
